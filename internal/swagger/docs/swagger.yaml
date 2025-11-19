@@ -1,0 +1,96 @@
+basePath: /
+definitions:
+  models.Answer:
+    properties:
+      code:
+        type: string
+      name:
+        type: string
+    type: object
+  models.ResponseQuestion:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/models.Answer'
+        type: array
+      code:
+        type: string
+      name:
+        type: string
+    type: object
+  models.UserAnswer:
+    properties:
+      answerCodes:
+        items:
+          type: string
+        type: array
+      question_code:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a Go API.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: My Go API
+  version: "1.0"
+paths:
+  /answers:
+    get:
+      consumes:
+      - application/json
+      description: возвращает список вопросов с вариантами ответов
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.ResponseQuestion'
+            type: array
+      summary: возвращает список вопросов с вариантами ответов
+      tags:
+      - тесты
+  /check:
+    post:
+      consumes:
+      - application/json
+      description: Принимает список выбранных пользователем ответов (questionCode
+        + answerCode) и возвращает количество правильных ответов.
+      parameters:
+      - description: Ответы пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.UserAnswer'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'result" "Correct answers: X/Y'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: error" "Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Проверка ответов пользователя
+      tags:
+      - тесты
+schemes:
+- http
+swagger: "2.0"
