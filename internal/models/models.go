@@ -33,3 +33,38 @@ type CheckResult struct {
 	RightAnswer  []string `json:"rightAnswerCode"`
 	IsCorrect    bool     `json:"isCorrect"`
 }
+
+type NoiseSource struct {
+	Name string
+	Code string
+}
+
+type Quest struct {
+	Noise    []NoiseSource
+	Code     string
+	ImagePNG string
+}
+
+type StatusThema string
+
+const (
+	StatusThemaOpen      StatusThema = `open`
+	StatusThemaCurrent   StatusThema = `current`
+	StatusThemaCompleted StatusThema = `completed`
+)
+
+type ThemaFullInfo struct {
+	Info      Thema
+	InfoBlock string
+	Questions []Question
+}
+type Thema struct {
+	Name   string
+	Code   string
+	Status StatusThema
+}
+
+type Course struct {
+	Themas      []Thema
+	Description string
+}

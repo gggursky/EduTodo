@@ -52,7 +52,7 @@ const docTemplate = `{
         },
         "/check": {
             "post": {
-                "description": "Принимает список выбранных пользователем ответов (questionCode + answerCode) и возвращает количество правильных ответов.",
+                "description": "Принимает список выбранных пользователем ответов (questionCode + answerCodes) и возвращает результат проверки",
                 "consumes": [
                     "application/json"
                 ],
@@ -79,7 +79,16 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "result\" \"Correct answers: X/Y",
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CheckResult"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -87,12 +96,131 @@ const docTemplate = `{
                             }
                         }
                     },
-                    "400": {
-                        "description": "error\" \"Invalid request",
+                    "500": {
+                        "description": "Внутренняя ошибка",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
                                 "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/quest": {
+            "get": {
+                "description": "Возвращает случайно выбранный вопрос из базы",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "тесты"
+                ],
+                "summary": "Случайный вопрос",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Quest"
+                        }
+                    }
+                }
+            }
+        },
+        "/thema/{code}": {
+            "get": {
+                "description": "Возвращает текстовый блок (InfoBlock) по теме",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "темы"
+                ],
+                "summary": "Полная информация о теме",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Код темы",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Текст темы",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Тема не найдена",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/thema/{code}/questions": {
+            "get": {
+                "description": "Возвращает список вопросов для указанной темы без вариантов ответов",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "тесты"
+                ],
+                "summary": "Список вопросов по теме",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Код темы",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Question"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Вопросы для темы не найдены",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/themas": {
+            "get": {
+                "description": "Возвращает краткую информацию по всем темам курса",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "темы"
+                ],
+                "summary": "Список тем",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Thema"
                             }
                         }
                     }
@@ -104,6 +232,88 @@ const docTemplate = `{
         "models.Answer": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AnswerVariant": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "isRight": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CheckResult": {
+            "type": "object",
+            "properties": {
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "questionCode": {
+                    "type": "string"
+                },
+                "rightAnswerCode": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "userAnswerCode": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "models.NoiseSource": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Quest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "imagePNG": {
+                    "type": "string"
+                },
+                "noise": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.NoiseSource"
+                    }
+                }
+            }
+        },
+        "models.Question": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AnswerVariant"
+                    }
+                },
                 "code": {
                     "type": "string"
                 },
@@ -126,6 +336,33 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "models.StatusThema": {
+            "type": "string",
+            "enum": [
+                "open",
+                "current",
+                "completed"
+            ],
+            "x-enum-varnames": [
+                "StatusThemaOpen",
+                "StatusThemaCurrent",
+                "StatusThemaCompleted"
+            ]
+        },
+        "models.Thema": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.StatusThema"
                 }
             }
         },

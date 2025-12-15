@@ -1,17 +1,27 @@
 package service
 
 import (
+	"fmt"
+	"math/rand"
+	"time"
+
 	"github.com/Konstantin299/EduTodo.git/internal/models"
 	"github.com/sirupsen/logrus"
 )
 
 type Service struct {
-	log *logrus.Entry
+	log    *logrus.Entry
+	Themas map[string]models.ThemaFullInfo
 }
 
 func New(log *logrus.Logger) *Service {
 	return &Service{
 		log: log.WithField("module", "service"),
+		Themas: map[string]models.ThemaFullInfo{
+			"code1": thema1,
+			"code2": thema2,
+			"code3": thema3,
+		},
 	}
 }
 
@@ -136,4 +146,40 @@ func (s *Service) CheckAnswer(userAnswers []models.UserAnswer) ([]models.CheckRe
 	}
 
 	return results, nil
+}
+func (s *Service) GetQuest() (models.Quest, error) {
+	rand.Seed(time.Now().UnixNano())
+
+	idx := rand.Intn(len(quests)) // случайный индекс
+	return quests[idx], nil
+}
+
+func (s *Service) GetThemas() ([]models.Thema, error) {
+	return course, nil
+}
+
+func (s *Service) GetThemaFullInfo(code string) (models.ThemaFullInfo, error) {
+	info, ok := s.Themas[code]
+	if !ok {
+		return models.ThemaFullInfo{}, fmt.Errorf("тема не найдена")
+	}
+	return info, nil
+}
+
+func (s *Service) GetQuestionsList(code string) []models.Question {
+	thema, ok := s.Themas[code]
+	if !ok {
+		return nil
+	}
+	questionsWithoutAnswers := make([]models.Question, len(thema.Questions))
+	for i, q := range thema.Questions {
+		questionsWithoutAnswers[i] = models.Question{
+			Name:    q.Name,
+			Code:    q.Code,
+			Answers: nil,
+		}
+	}
+
+	return questionsWithoutAnswers
+
 }
