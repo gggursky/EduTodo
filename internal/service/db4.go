@@ -38,7 +38,7 @@ func init() {
 			Name: ThemeAcousticsName,
 			Code: ThemeAcousticsCode,
 		},
-		InfoBlock: load("internal/data/tema2.txt"),
+		InfoBlock: load("internal/data/tema1.txt"),
 		Questions: []models.Question{
 			{
 				Name: "Что является обязательным элементом при монтаже панелей ЗИПС на стену или потолок?",
@@ -142,7 +142,7 @@ func init() {
 			Name: ThemeFramelessName,
 			Code: ThemeFramelessCode,
 		},
-		InfoBlock: load("internal/data/tema2.txt"),
+		InfoBlock: load("internal/data/tema3.txt"),
 		Questions: []models.Question{
 			{
 				Name: "Что произойдёт, если при монтаже звукоизоляционной конструкции не использовать вибропрокладки?",
