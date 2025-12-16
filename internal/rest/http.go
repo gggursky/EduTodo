@@ -22,7 +22,7 @@ type service interface {
 	GetQuest() (models.Quest, error)
 	GetThemas() ([]models.Thema, error)
 	GetThemaFullInfo(code string) (models.ThemaFullInfo, error)
-	GetQuestionsList(code string) []models.Question
+	GetQuestionsList(code string) []models.ResponseQuestion
 }
 
 type Server struct {

@@ -166,20 +166,28 @@ func (s *Service) GetThemaFullInfo(code string) (models.ThemaFullInfo, error) {
 	return info, nil
 }
 
-func (s *Service) GetQuestionsList(code string) []models.Question {
+func (s *Service) GetQuestionsList(code string) []models.ResponseQuestion {
 	thema, ok := s.Themas[code]
 	if !ok {
 		return nil
 	}
-	questionsWithoutAnswers := make([]models.Question, len(thema.Questions))
-	for i, q := range thema.Questions {
-		questionsWithoutAnswers[i] = models.Question{
+	result := make([]models.ResponseQuestion, 0, len(thema.Questions))
+
+	for _, q := range thema.Questions {
+		answers := make([]models.Answer, 0, len(q.Answers))
+		for _, a := range q.Answers {
+			answers = append(answers, models.Answer{
+				Name: a.Name,
+				Code: a.Code,
+			})
+		}
+
+		result = append(result, models.ResponseQuestion{
 			Name:    q.Name,
 			Code:    q.Code,
-			Answers: nil,
-		}
+			Answers: answers,
+		})
 	}
 
-	return questionsWithoutAnswers
-
+	return result
 }
