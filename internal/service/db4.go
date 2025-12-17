@@ -7,13 +7,13 @@ import (
 )
 
 const (
-	ThemeAcousticsName = "Основы строительной акустики и защиты от шума"
+	ThemeAcousticsName = "Бескаркасная звукоизоляция стен и потолков"
 	ThemeAcousticsCode = "code1"
 
-	ThemeIsolationName = "Основы технологии звукоизоляции"
+	ThemeIsolationName = "Основы строительной акустики и защиты от шума"
 	ThemeIsolationCode = "code2"
 
-	ThemeFramelessName = "Бескаркасная звукоизоляция стен и потолков"
+	ThemeFramelessName = "Основы технологии звукоизоляции"
 	ThemeFramelessCode = "code3"
 )
 
