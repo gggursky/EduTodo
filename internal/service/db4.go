@@ -7,14 +7,14 @@ import (
 )
 
 const (
-	ThemeAcousticsName = "Бескаркасная звукоизоляция стен и потолков"
-	ThemeAcousticsCode = "code1"
+	ThemeFramelessName = "Бескаркасная звукоизоляция стен и потолков"
+	ThemeFramelessCode = "code1"
 
-	ThemeIsolationName = "Основы строительной акустики и защиты от шума"
-	ThemeIsolationCode = "code2"
+	ThemeAcousticsBasicsName = "Основы строительной акустики и защиты от шума"
+	ThemeAcousticsBasicsCode = "code2"
 
-	ThemeFramelessName = "Основы технологии звукоизоляции"
-	ThemeFramelessCode = "code3"
+	ThemeSoundproofingBasicsName = "Основы технологии звукоизоляции"
+	ThemeSoundproofingBasicsCode = "code3"
 )
 
 var (
@@ -35,8 +35,8 @@ func init() {
 
 	thema1 = models.ThemaFullInfo{
 		Info: models.Thema{
-			Name: ThemeAcousticsName,
-			Code: ThemeAcousticsCode,
+			Name: ThemeFramelessName,
+			Code: ThemeFramelessCode,
 		},
 		InfoBlock: load("internal/data/tema1.txt"),
 		Questions: []models.Question{
@@ -45,14 +45,14 @@ func init() {
 				Code: "1",
 				Answers: []models.AnswerVariant{
 					{
-						Name:    "Панель должна крепиться к стене через обычные саморезы",
+						Name:    "Панель крепится только через виброузлы, входящие в комплект",
 						Code:    "1",
-						IsRight: false,
+						IsRight: true,
 					},
 					{
-						Name:    "Панель крепится только через виброузлы, входящие в комплект",
+						Name:    "Панель должна крепиться к стене через обычные саморезы",
 						Code:    "2",
-						IsRight: true,
+						IsRight: false,
 					},
 					{
 						Name:    "Панель обязательно клеится к стене по всей площади",
@@ -87,8 +87,8 @@ func init() {
 
 	thema2 = models.ThemaFullInfo{
 		Info: models.Thema{
-			Name: ThemeIsolationName,
-			Code: ThemeIsolationCode,
+			Name: ThemeAcousticsBasicsName,
+			Code: ThemeAcousticsBasicsCode,
 		},
 		InfoBlock: load("internal/data/tema2.txt"),
 		Questions: []models.Question{
@@ -102,14 +102,14 @@ func init() {
 						IsRight: false,
 					},
 					{
-						Name:    "Наличие воздушной прослойки, работающей как «пружина»",
+						Name:    "Использование только тяжелых материалов",
 						Code:    "2",
-						IsRight: true,
+						IsRight: false,
 					},
 					{
-						Name:    "Использование только тяжелых материалов",
+						Name:    "Наличие воздушной прослойки, работающей как «пружина»",
 						Code:    "3",
-						IsRight: false,
+						IsRight: true,
 					},
 				},
 			},
@@ -139,8 +139,8 @@ func init() {
 
 	thema3 = models.ThemaFullInfo{
 		Info: models.Thema{
-			Name: ThemeFramelessName,
-			Code: ThemeFramelessCode,
+			Name: ThemeSoundproofingBasicsName,
+			Code: ThemeSoundproofingBasicsCode,
 		},
 		InfoBlock: load("internal/data/tema3.txt"),
 		Questions: []models.Question{
@@ -170,9 +170,9 @@ func init() {
 				Code: "2",
 				Answers: []models.AnswerVariant{
 					{
-						Name:    "Шуманет-ЭКО",
+						Name:    "Пенопласт",
 						Code:    "1",
-						IsRight: false,
+						IsRight: true,
 					},
 					{
 						Name:    "Шуманет-БМ",
@@ -180,9 +180,9 @@ func init() {
 						IsRight: false,
 					},
 					{
-						Name:    "Пенопласт",
+						Name:    "Шуманет-ЭКО",
 						Code:    "3",
-						IsRight: true,
+						IsRight: false,
 					},
 				},
 			},
@@ -193,7 +193,7 @@ func init() {
 var Themas = []models.ThemaFullInfo{thema1, thema2, thema3}
 
 var course = []models.Thema{
-	{Name: `Основы строительной акустики и защиты от шума`, Code: `code1`},
-	{Name: `Бескаркасная звукоизоляция стен и потолков`, Code: `code2`},
+	{Name: `Бескаркасная звукоизоляция стен и потолков`, Code: `code1`},
+	{Name: `Основы строительной акустики и защиты от шума`, Code: `code2`},
 	{Name: `Основы технологии звукоизоляции`, Code: `code3`},
 }

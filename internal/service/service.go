@@ -171,9 +171,22 @@ func (s *Service) GetQuestionsList(code string) []models.ResponseQuestion {
 	if !ok {
 		return nil
 	}
-	result := make([]models.ResponseQuestion, 0, len(thema.Questions))
 
-	for _, q := range thema.Questions {
+	// ⚠️ важно инициализировать seed
+	rand.Seed(time.Now().UnixNano())
+
+	// копируем слайс, чтобы не портить исходный порядок
+	questions := make([]models.Question, len(thema.Questions))
+	copy(questions, thema.Questions)
+
+	// перемешиваем
+	rand.Shuffle(len(questions), func(i, j int) {
+		questions[i], questions[j] = questions[j], questions[i]
+	})
+
+	result := make([]models.ResponseQuestion, 0, len(questions))
+
+	for _, q := range questions {
 		answers := make([]models.Answer, 0, len(q.Answers))
 		for _, a := range q.Answers {
 			answers = append(answers, models.Answer{
