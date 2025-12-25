@@ -17,9 +17,9 @@ import (
 
 type service interface {
 	GetInfo() (string, error)
-	GetAnswersList() ([]models.ResponseQuestion, error)
+	//GetAnswersList() ([]models.ResponseQuestion, error)
 	CheckAnswer([]models.UserAnswer) ([]models.CheckResult, error)
-	GetQuest() (models.Quest, error)
+	//GetQuest() (models.Quest, error)
 	GetThemas() ([]models.Thema, error)
 	GetThemaFullInfo(code string) (models.ThemaFullInfo, error)
 	GetQuestionsList(code string) []models.ResponseQuestion
@@ -66,11 +66,11 @@ func (s *Server) Run(ctx context.Context) error {
 	}()
 	// маршрут.
 	router.GET("/text", s.GetText)
-	router.GET("/answers", s.GetAnswers)
-	router.GET("/thema/check/:code/questions", s.Check)
+	//router.GET("/answers", s.GetAnswers)
+	//router.GET("/thema/check/:code/questions", s.Check)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.POST("/check", s.Check)
-	router.GET("/quest", s.GetQuest)
+	//router.GET("/quest", s.GetQuest)
 	router.GET("/themas", s.GetThemas)
 	router.GET("/thema/:code", s.GetThemaFullInfo)
 	router.GET("/thema/:code/questions", s.GetQuestionsList)

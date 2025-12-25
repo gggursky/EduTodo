@@ -24,15 +24,15 @@ func (s *Server) GetText(context *gin.Context) {
 // @Produce json
 // @Success 201 {object} []models.ResponseQuestion
 // @Router /answers [GET]
-func (s *Server) GetAnswers(context *gin.Context) {
-	answersList, _ := s.service.GetAnswersList()
-
-	context.IndentedJSON(
-		http.StatusOK,
-		answersList,
-	)
-
-}
+//func (s *Server) GetAnswers(context *gin.Context) {
+//	answersList, _ := s.service.GetAnswersList()
+//
+//	context.IndentedJSON(
+//		http.StatusOK,
+//		answersList,
+//	)
+//
+//}
 
 //func (s *Server) Check(context *gin.Context) {
 //	type questions []models.ResponseQuestion
@@ -84,14 +84,14 @@ func (s *Server) Check(context *gin.Context) {
 // @Produce json
 // @Success 200 {object} models.Quest
 // @Router /quest [GET]
-func (s *Server) GetQuest(context *gin.Context) {
-	answersList, _ := s.service.GetQuest()
-
-	context.IndentedJSON(
-		http.StatusOK,
-		answersList,
-	)
-}
+//func (s *Server) GetQuest(context *gin.Context) {
+//	answersList, _ := s.service.GetQuest()
+//
+//	context.IndentedJSON(
+//		http.StatusOK,
+//		answersList,
+//	)
+//}
 
 // GetThemas возвращает список тем
 // @Summary Список тем

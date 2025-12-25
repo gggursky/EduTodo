@@ -35,40 +35,40 @@ func (s *Service) GetInfo() (string, error) {
 //	return []string{answer1.Answer, answer2.Answer}, nil
 //}
 
-func (s *Service) GetAnswersList() ([]models.ResponseQuestion, error) {
-	var result []models.ResponseQuestion
-
-	for _, q := range questions {
-		var tmp models.ResponseQuestion
-
-		tmp.Name = q.Name
-		tmp.Code = q.Code
-
-		for _, a := range q.Answers {
-			tmp.Answers = append(tmp.Answers, models.Answer{Name: a.Name, Code: a.Code})
-		}
-
-		result = append(result, tmp)
-	}
-
-	return result, nil
-}
+//func (s *Service) GetAnswersList() ([]models.ResponseQuestion, error) {
+//	var result []models.ResponseQuestion
+//
+//	for _, q := range questions {
+//		var tmp models.ResponseQuestion
+//
+//		tmp.Name = q.Name
+//		tmp.Code = q.Code
+//
+//		for _, a := range q.Answers {
+//			tmp.Answers = append(tmp.Answers, models.Answer{Name: a.Name, Code: a.Code})
+//		}
+//
+//		result = append(result, tmp)
+//	}
+//
+//	return result, nil
+//}
 
 //func (s *Service) CheckAnswer([]models.ResponseQuestion) (string, error) {
-//	//for _, q := range questions {
-//	//	if q.Code == questionCode {
-//	//		for _, a := range q.Answers {
-//	//			if a.Code == respCode {
-//	//				if a.IsRight {
-//	//					return fmt.Sprintf("Верно: вопрос \"%s\", выбран ответ \"%s\" (код %s)", q.Name, a.Name, a.Code), nil
-//	//				}
-//	//				return fmt.Sprintf("Неверно: вопрос \"%s\", выбран ответ \"%s\" (код %s)", q.Name, a.Name, a.Code), nil
-//	//			}
-//	//		}
-//	//		return "", fmt.Errorf("ответ с кодом %s для вопроса %s не найден", respCode, questionCode)
-//	//	}
-//	//}
-//	//return "", fmt.Errorf("вопрос с кодом %s не найден", questionCode)
+//	for _, q := range questions {
+//		if q.Code == questionCode {
+//			for _, a := range q.Answers {
+//				if a.Code == respCode {
+//					if a.IsRight {
+//						return fmt.Sprintf("Верно: вопрос \"%s\", выбран ответ \"%s\" (код %s)", q.Name, a.Name, a.Code), nil
+//					}
+//					return fmt.Sprintf("Неверно: вопрос \"%s\", выбран ответ \"%s\" (код %s)", q.Name, a.Name, a.Code), nil
+//				}
+//			}
+//			return "", fmt.Errorf("ответ с кодом %s для вопроса %s не найден", respCode, questionCode)
+//		}
+//	}
+//	return "", fmt.Errorf("вопрос с кодом %s не найден", questionCode)
 //	return "Ок", nil
 //}
 
@@ -115,44 +115,51 @@ func sameSet(a, b []string) bool {
 }
 
 func (s *Service) CheckAnswer(userAnswers []models.UserAnswer) ([]models.CheckResult, error) {
-	var results []models.CheckResult
+	results := make([]models.CheckResult, 0, len(userAnswers))
 
 	for _, ua := range userAnswers {
-		result := models.CheckResult{
-			QuestionCode: ua.QuestionCode,
-			UserAnswer:   ua.AnswerCodes,
-			IsCorrect:    false,
-		}
 
-		for _, q := range questions {
-			if q.Code != ua.QuestionCode {
-				continue
-			}
+		var found bool
 
-			var right []string
-			for _, ans := range q.Answers {
-				if ans.IsRight {
-					right = append(right, ans.Code)
+		for _, thema := range s.Themas {
+			for _, q := range thema.Questions {
+				if q.Code != ua.QuestionCode {
+					continue
 				}
+
+				var right []string
+				for _, a := range q.Answers {
+					if a.IsRight {
+						right = append(right, a.Code)
+					}
+				}
+
+				results = append(results, models.CheckResult{
+					QuestionCode: q.Code,
+					UserAnswer:   ua.AnswerCodes,
+					RightAnswer:  right,
+					IsCorrect:    sameSet(ua.AnswerCodes, right),
+				})
+
+				found = true
+				break
 			}
-
-			result.RightAnswer = right
-			result.IsCorrect = sameSet(ua.AnswerCodes, right)
-
-			break
+			if found {
+				break
+			}
 		}
-
-		results = append(results, result)
 	}
 
 	return results, nil
 }
-func (s *Service) GetQuest() (models.Quest, error) {
-	rand.Seed(time.Now().UnixNano())
 
-	idx := rand.Intn(len(quests)) // случайный индекс
-	return quests[idx], nil
-}
+//func (s *Service) GetQuest() (models.Quest, error) {
+//	rand.Seed(time.Now().UnixNano())
+//
+//	idx := rand.Intn(len(quests)) // случайный индекс
+//	return quests[idx], nil
+//}
+//
 
 func (s *Service) GetThemas() ([]models.Thema, error) {
 	return course, nil
@@ -187,8 +194,18 @@ func (s *Service) GetQuestionsList(code string) []models.ResponseQuestion {
 	result := make([]models.ResponseQuestion, 0, len(questions))
 
 	for _, q := range questions {
-		answers := make([]models.Answer, 0, len(q.Answers))
-		for _, a := range q.Answers {
+
+		// копируем ответы
+		answersVariants := make([]models.AnswerVariant, len(q.Answers))
+		copy(answersVariants, q.Answers)
+
+		// перемешиваем
+		rand.Shuffle(len(answersVariants), func(i, j int) {
+			answersVariants[i], answersVariants[j] = answersVariants[j], answersVariants[i]
+		})
+
+		answers := make([]models.Answer, 0, len(answersVariants))
+		for _, a := range answersVariants {
 			answers = append(answers, models.Answer{
 				Name: a.Name,
 				Code: a.Code,
@@ -201,6 +218,5 @@ func (s *Service) GetQuestionsList(code string) []models.ResponseQuestion {
 			Answers: answers,
 		})
 	}
-
 	return result
 }

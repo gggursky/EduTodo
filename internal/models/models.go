@@ -28,7 +28,7 @@ type UserAnswer struct {
 }
 
 type CheckResult struct {
-	QuestionCode string   `json:"questionCode"`
+	QuestionCode string   `json:"question_code"`
 	UserAnswer   []string `json:"userAnswerCode"`
 	RightAnswer  []string `json:"rightAnswerCode"`
 	IsCorrect    bool     `json:"isCorrect"`
