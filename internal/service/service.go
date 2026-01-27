@@ -9,12 +9,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type store interface {
+	GetThemasByCourse(code string) ([]models.Thema, error)
+}
 type Service struct {
 	log    *logrus.Entry
 	Themas map[string]models.ThemaFullInfo
+	db     store
 }
 
-func New(log *logrus.Logger) *Service {
+func New(log *logrus.Logger, db store) *Service {
 	return &Service{
 		log: log.WithField("module", "service"),
 		Themas: map[string]models.ThemaFullInfo{
@@ -22,6 +26,7 @@ func New(log *logrus.Logger) *Service {
 			"code2": thema2,
 			"code3": thema3,
 		},
+		db: db,
 	}
 }
 

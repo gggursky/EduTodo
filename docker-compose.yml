@@ -1,0 +1,20 @@
+services:
+  edu_todo_pg:
+    image: postgres:16.0
+    container_name: edu_todo_pg
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: edu_todo_db
+    ports:
+      - "5533:5432"
+
+  edu_todo_service:
+    build:
+      context: .
+    container_name: edu_todo_service
+    environment:
+      AS_PG_DSN: postgres://user:secret@edu_todo_pg:5432/edu_todo_db?sslmode=disable
+    ports:
+      - "3007:3007"
+    restart: on-failure
